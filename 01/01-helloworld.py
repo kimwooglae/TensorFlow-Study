@@ -17,4 +17,6 @@ print a
 print b
 print c
 
-print session.run(c);
+print session.run(c)
+
+
