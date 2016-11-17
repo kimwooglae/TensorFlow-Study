@@ -15,7 +15,7 @@ hypothesis = tf.div(1.,1.+tf.exp(-h))
 
 cost = -tf.reduce_mean(Y*tf.log(hypothesis) + (1-Y)*tf.log(1-hypothesis))
 
-a = tf.Variable(0.1)
+a = tf.Variable(0.7)
 optimizer = tf.train.GradientDescentOptimizer(a)
 train = optimizer.minimize(cost)
 
