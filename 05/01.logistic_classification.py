@@ -24,9 +24,9 @@ init = tf.initialize_all_variables()
 sess = tf.Session()
 sess.run(init)
 
-for step in xrange(20001):
+for step in xrange(10001):
 	sess.run(train, feed_dict={X:x_data, Y:y_data})
-	if step % 20 == 0:
+	if step % 1000 == 0:
 		print step, sess.run(cost, feed_dict={X:x_data, Y:y_data}), sess.run(W)
 
 
@@ -41,3 +41,10 @@ print sess.run(hypothesis, feed_dict={X:[[1], [5], [3]]})>0.5
 print sess.run(hypothesis, feed_dict={X:[[1], [3], [5]]})>0.5
 print sess.run(hypothesis, feed_dict={X:[[1], [5], [4]]})>0.5
 print sess.run(hypothesis, feed_dict={X:[[1], [4], [5]]})>0.5
+
+print '------------------------------------------'
+print xy
+print '------------------------------------------'
+print x_data
+print '------------------------------------------'
+print y_data
