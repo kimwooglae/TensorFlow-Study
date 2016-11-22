@@ -18,7 +18,7 @@ W = tf.Variable([[1.,1.,1.],[1.,1.,1.],[1.,1.,1.]])
 
 hypothesis = tf.nn.softmax(tf.matmul(X, W))
 
-learning_rate = 10.   #learing_rate가 너무커서 발산됨 
+learning_rate = 10.   #learing_rate가 너무커서 발산됨
 
 cost = tf.reduce_mean(-tf.reduce_sum(Y*tf.log(hypothesis), reduction_indices=1))
 

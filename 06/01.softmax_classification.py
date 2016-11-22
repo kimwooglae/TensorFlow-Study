@@ -5,6 +5,7 @@ import numpy as np
 xy = np.loadtxt('train.txt', unpack=True, dtype='float32')
 
 x_data1 = xy[0:3]
+y_data1 = xy[3:]
 x_data = np.transpose(xy[0:3])
 y_data = np.transpose(xy[3:])
 
@@ -36,16 +37,16 @@ with tf.Session() as sess:
 			print step, sess.run(cost, feed_dict={X:x_data, Y:y_data}), sess.run(W)
 	print '------------------------------------------'
 	a = sess.run(hypothesis, feed_dict={X:[[1, 11, 7]]})
-	print a, sess.run(tf.arg_max(a,1))
+	print a, sess.run(tf.argmax(a,1))
 
 	b = sess.run(hypothesis, feed_dict={X:[[1, 3, 4]]})
-	print b, sess.run(tf.arg_max(b,1))
+	print b, sess.run(tf.argmax(b,1))
 
 	c = sess.run(hypothesis, feed_dict={X:[[1, 1, 0]]})
-	print c, sess.run(tf.arg_max(c,1))
+	print c, sess.run(tf.argmax(c,1))
 
 	all = sess.run(hypothesis, feed_dict={X:[[1, 11, 7], [1, 3, 4], [1, 1, 0]]})
-	print all, sess.run(tf.arg_max(all, 1))
+	print all, sess.run(tf.argmax(all, 1))
 
 	print 'W ------------------------------------------'
 	print sess.run(W)
