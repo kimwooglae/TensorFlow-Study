@@ -30,8 +30,8 @@ init = tf.initialize_all_variables()
 sess = tf.Session()
 sess.run(init)
 
-for step in xrange(200001):
+for step in range(200001):
 #	sess.run(W1, feed_dict = {})
 	sess.run(train)
 	if step % 20 == 0:
-		print step, sess.run(cost), sess.run(W1), sess.run(W2), sess.run(b)
+		print(step, sess.run(cost), sess.run(W1), sess.run(W2), sess.run(b))
