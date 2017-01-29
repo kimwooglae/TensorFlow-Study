@@ -15,7 +15,7 @@ hypothesis = W * X
 cost = tf.reduce_mean(tf.square(hypothesis - Y))
 
 descent = W - tf.mul(0.01, tf.reduce_mean(tf.mul((tf.mul(W,X)-Y),X)))
-update = W.assign(descent)
+train = W.assign(descent)
 
 init = tf.global_variables_initializer()
 
@@ -23,6 +23,5 @@ sess = tf.Session()
 sess.run(init)
 
 for step in range(100):
-	sess.run(update, feed_dict={X:x_data, Y:y_data})
+	sess.run(train, feed_dict={X:x_data, Y:y_data})
 	print (step, sess.run(cost, feed_dict={X:x_data, Y:y_data}), sess.run(W))
-# 	print (step, sess.run(cost, feed_dict={X:x_data, Y:y_data}), sess.run(W))

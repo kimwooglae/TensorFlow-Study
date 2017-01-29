@@ -15,7 +15,7 @@ hypothesis = tf.div(1.,1.+tf.exp(-h))
 
 cost = -tf.reduce_mean(Y*tf.log(hypothesis) + (1-Y)*tf.log(1-hypothesis))
 
-a = tf.Variable(0.7)
+a = tf.Variable(0.1)
 optimizer = tf.train.GradientDescentOptimizer(a)
 train = optimizer.minimize(cost)
 
@@ -24,27 +24,27 @@ init = tf.initialize_all_variables()
 sess = tf.Session()
 sess.run(init)
 
-for step in xrange(10001):
+for step in range(500001):
 	sess.run(train, feed_dict={X:x_data, Y:y_data})
 	if step % 1000 == 0:
-		print step, sess.run(cost, feed_dict={X:x_data, Y:y_data}), sess.run(W)
+		print (step, sess.run(cost, feed_dict={X:x_data, Y:y_data}), sess.run(W))
 
 
-print '------------------------------------------'
+print('------------------------------------------')
 
-print sess.run(hypothesis, feed_dict={X:[[1], [2], [2]]})>0.5
-print sess.run(hypothesis, feed_dict={X:[[1], [5], [5]]})>0.5
+print(sess.run(hypothesis, feed_dict={X:[[1], [2], [2]]})>0.5)
+print(sess.run(hypothesis, feed_dict={X:[[1], [5], [5]]})>0.5)
 
-print sess.run(hypothesis, feed_dict={X:[[1], [3], [2]]})>0.5
-print sess.run(hypothesis, feed_dict={X:[[1], [3], [3]]})>0.5
-print sess.run(hypothesis, feed_dict={X:[[1], [5], [3]]})>0.5
-print sess.run(hypothesis, feed_dict={X:[[1], [3], [5]]})>0.5
-print sess.run(hypothesis, feed_dict={X:[[1], [5], [4]]})>0.5
-print sess.run(hypothesis, feed_dict={X:[[1], [4], [5]]})>0.5
+print(sess.run(hypothesis, feed_dict={X:[[1], [3], [2]]})>0.5)
+print(sess.run(hypothesis, feed_dict={X:[[1], [3], [3]]})>0.5)
+print(sess.run(hypothesis, feed_dict={X:[[1], [5], [3]]})>0.5)
+print(sess.run(hypothesis, feed_dict={X:[[1], [3], [5]]})>0.5)
+print(sess.run(hypothesis, feed_dict={X:[[1], [5], [4]]})>0.5)
+print(sess.run(hypothesis, feed_dict={X:[[1], [4], [5]]})>0.5)
 
-print '------------------------------------------'
-print xy
-print '------------------------------------------'
-print x_data
-print '------------------------------------------'
-print y_data
+print('------------------------------------------')
+print(xy)
+print('------------------------------------------')
+print(x_data)
+print('------------------------------------------')
+print(y_data)
