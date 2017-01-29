@@ -8,5 +8,5 @@ mul = tf.mul(a,b)
 
 sess = tf.Session()
 
-print sess.run(add, feed_dict={a:2, b:33})
-print sess.run(mul, feed_dict={a:24, b:22})
+print(sess.run(add, feed_dict={a:2, b:33}))
+print(sess.run(mul, feed_dict={a:24, b:22}))
