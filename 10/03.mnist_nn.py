@@ -13,14 +13,14 @@ def xaver_init(n_inputs, n_outputs, uniform = True):
         stddev = tf.sqrt(3.0 / (n_inputs + n_outputs))
         return tf.truncated_normal_initializer(stddev=stddev)
 
-learning_rate = 0.0001
-training_epochs = 50
+learning_rate = 0.01
+training_epochs = 10
 #batch_size = [1, 2, 4, 5, 10, 11, 20, 22, 25, 44, 50, 55, 100, 110, 125, 220, 250, 275, 500, 550]
 #batch_size = [20, 22, 25, 44, 50, 55, 100, 110, 125, 220, 250, 275, 500, 550]
 batch_size = [20, 44, 55, 100, 125, 220]
 #batch_size = [25, 44, 50, 55, 100, 110, 125, 220, 250, 275, 500, 550]
 display_step = 1
-dropout_rateArr = [0.85, 0.86, 0.87, 0.88, 0.89, 0.90]
+dropout_rateArr = [0.70, 0.70, 0.70, 0.70, 0.70, 0.70]
 #dropout_rateArr = [0.81, 0.82, 0.83, 0.84, 0.85, 0.86, 0.87, 0.88, 0.89, 0.90]
 
 
@@ -36,6 +36,9 @@ W1 = tf.get_variable("W1", shape=[784,1031], initializer=xaver_init(784,1031))
 W2 = tf.get_variable("W2", shape=[1031,1993], initializer=xaver_init(1031,1993))
 W3 = tf.get_variable("W3", shape=[1993,2017], initializer=xaver_init(1993,2017))
 W4 = tf.get_variable("W4", shape=[2017,1031], initializer=xaver_init(2017,1031))
+W5 = tf.get_variable("W5", shape=[1031,10], initializer=xaver_init(1031,10))
+
+'''
 W5 = tf.get_variable("W5", shape=[1031,1993], initializer=xaver_init(1031,1993))
 W6 = tf.get_variable("W6", shape=[1993,2017], initializer=xaver_init(1993,2017))
 W7 = tf.get_variable("W7", shape=[2017,1031], initializer=xaver_init(2017,1031))
@@ -52,6 +55,7 @@ W17 = tf.get_variable("W17", shape=[1031,1993], initializer=xaver_init(1031,1993
 W18 = tf.get_variable("W18", shape=[1993,2017], initializer=xaver_init(1993,2017))
 W19 = tf.get_variable("W19", shape=[2017,1031], initializer=xaver_init(2017,1031))
 W20 = tf.get_variable("W20", shape=[1031,10], initializer=xaver_init(1031,10))		#0.9672	#0.9696
+'''
 
 #W1 = tf.Variable(tf.random_normal([784, 1031]))
 #W2 = tf.Variable(tf.random_normal([1031, 1031]))
@@ -61,6 +65,8 @@ B1 = tf.Variable(tf.random_normal([1031]))
 B2 = tf.Variable(tf.random_normal([1993]))
 B3 = tf.Variable(tf.random_normal([2017]))
 B4 = tf.Variable(tf.random_normal([1031]))
+B5 = tf.Variable(tf.random_normal([10]))
+'''
 B5 = tf.Variable(tf.random_normal([1993]))
 B6 = tf.Variable(tf.random_normal([2017]))
 B7 = tf.Variable(tf.random_normal([1031]))
@@ -77,7 +83,7 @@ B17 = tf.Variable(tf.random_normal([1993]))
 B18 = tf.Variable(tf.random_normal([2017]))
 B19 = tf.Variable(tf.random_normal([1031]))
 B20 = tf.Variable(tf.random_normal([10]))
-
+'''
 dropout_rate = tf.placeholder("float")
 #construct model
 _L1 = tf.nn.relu(tf.add(tf.matmul(x,W1), B1))
@@ -89,8 +95,8 @@ L3 = tf.nn.dropout(_L3, dropout_rate)
 _L4 = tf.nn.relu(tf.add(tf.matmul(L3,W4), B4))
 L4 = tf.nn.dropout(_L4, dropout_rate)
 
-#activation = tf.add(tf.matmul(L4,W20), B20)
-
+activation = tf.add(tf.matmul(L4,W5), B5)
+'''
 _L5 = tf.nn.relu(tf.add(tf.matmul(L4,W5), B5))
 L5 = tf.nn.dropout(_L5, dropout_rate)
 _L6 = tf.nn.relu(tf.add(tf.matmul(L5,W6), B6))
@@ -99,6 +105,7 @@ _L7 = tf.nn.relu(tf.add(tf.matmul(L6,W7), B7))
 L7 = tf.nn.dropout(_L7, dropout_rate)
 
 activation = tf.add(tf.matmul(L7,W20), B20)
+'''
 
 #_L8 = tf.nn.relu(tf.add(tf.matmul(L7,W8), B8))
 #L8 = tf.nn.dropout(_L8, dropout_rate)
@@ -139,12 +146,12 @@ cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(activation, y))
 optimizer = tf.train.AdamOptimizer(learning_rate).minimize(cost) #O.9582
 #optimizer = tf.train.GradientDescentOptimizer(learning_rate).minimize(cost) #0.9254
 
-init = tf.initialize_all_variables()
+init = tf.global_variables_initializer()
 
 mnist = input_data.read_data_sets("MNIST_data/", one_hot=True)
 checkpoint_dir = "cps/"
 
-print "mnist.train.num_examples: ",  mnist.train.num_examples
+print("mnist.train.num_examples: ",  mnist.train.num_examples)
 
 NUM_THREADS = 50
 #sess = tf.Session(config=tf.ConfigProto(intra_op_parallelism_threads=NUM_THREADS))
@@ -155,7 +162,7 @@ saver = tf.train.Saver()
 
 ckpt = tf.train.get_checkpoint_state(checkpoint_dir)
 if ckpt and ckpt.model_checkpoint_path:
-	print ('load learning')
+	print('load learning')
 	saver.restore(sess, ckpt.model_checkpoint_path)
 
 for epoch in range(training_epochs):
@@ -170,28 +177,24 @@ for epoch in range(training_epochs):
 		avg_cost += sess.run(cost, feed_dict={x:batch_xs, y:batch_ys, dropout_rate:dropout_rateArr[epoch%len(dropout_rateArr)]})/total_batch
 	# Display logs per epoch step
 	if epoch % display_step == 0:
-		print datetime.datetime.now(), " Batch: ", batch_size[epoch%len(batch_size)] ," dropout_rate: ", dropout_rateArr[epoch%len(dropout_rateArr)] , " Epoch:", "%04d" % (epoch+1), "cost=", "{:9f}".format(avg_cost)
-print "Optimization Finished!"
+		print(datetime.datetime.now(), " Batch: ", batch_size[epoch%len(batch_size)] ," dropout_rate: ", dropout_rateArr[epoch%len(dropout_rateArr)] , " Epoch:", "%04d" % (epoch+1), "cost=", "{:9f}".format(avg_cost))
+print("Optimization Finished!")
 
 # Test model
 correct_prediction = tf.equal(tf.argmax(activation, 1), tf.argmax(y, 1))
 
 # Calculate accuracy
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, "float"))
-#print "Accuracy:", accuracy.eval({x:mnist.test.images, y:mnist.test.labels})
-print "Accuracy: ", sess.run(accuracy, {x:mnist.test.images, y:mnist.test.labels, dropout_rate:1})
+#print("Accuracy:", accuracy.eval({x:mnist.test.images, y:mnist.test.labels}))
+print("Accuracy: ", sess.run(accuracy, {x:mnist.test.images, y:mnist.test.labels, dropout_rate:1}))
 
 #Get one and predict
 
 r = random.randint(0, mnist.test.num_examples -1)
-print "Label: ", sess.run(tf.argmax(mnist.test.labels[r:r+1], 1))
-print "Prediction: ", sess.run(tf.argmax(activation,1), {x:mnist.test.images[r:r+1], dropout_rate:1.0})
+print("Label: ", sess.run(tf.argmax(mnist.test.labels[r:r+1], 1)))
+print("Prediction: ", sess.run(tf.argmax(activation,1), {x:mnist.test.images[r:r+1], dropout_rate:1.0}))
 
 #Show the image
 #plt.imshow(mnist.test.images[r:r+1].reshape(28,28), cmap="Greys", interpolation="nearest")
 #plt.show()
 
-
-
-
- 

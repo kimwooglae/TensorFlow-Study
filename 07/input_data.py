@@ -1,7 +1,8 @@
 """Functions for downloading and reading MNIST data."""
+from __future__ import print_function
 import gzip
 import os
-import urllib
+import urllib.request as urllib
 import numpy
 SOURCE_URL = 'http://yann.lecun.com/exdb/mnist/'
 def maybe_download(filename, work_directory):

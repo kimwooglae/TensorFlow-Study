@@ -37,7 +37,7 @@ activation = tf.nn.softmax(tf.matmul(x,W) + b)
 cost = tf.reduce_mean(-tf.reduce_sum(y*tf.log(activation),reduction_indices=1))
 optimizer = tf.train.GradientDescentOptimizer(learning_rate).minimize(cost)
 
-init = tf.initialize_all_variables()
+init = tf.global_variables_initializer()
 
 mnist = input_data.read_data_sets("MNIST_data/", one_hot=True)
 checkpoint_dir = "cps/"
@@ -52,7 +52,7 @@ saver = tf.train.Saver()
 
 ckpt = tf.train.get_checkpoint_state(checkpoint_dir)
 if ckpt and ckpt.model_checkpoint_path:
-	print ('load learning')
+	print(('load learning'))
 	saver.restore(sess, ckpt.model_checkpoint_path)
 
 for epoch in range(training_epochs):
@@ -67,22 +67,22 @@ for epoch in range(training_epochs):
 		avg_cost += sess.run(cost, feed_dict={x:batch_xs, y:batch_ys})/total_batch
 	# Display logs per epoch step
 	if epoch % display_step == 0:
-		print "Epoch:", "%04d" % (epoch+1), "cost=", "{:9f}".format(avg_cost)
-print "Optimization Finished!"
+		print("Epoch:", "%04d" % (epoch+1), "cost=", "{:9f}".format(avg_cost))
+print("Optimization Finished!")
 
 # Test model
 correct_prediction = tf.equal(tf.argmax(activation, 1), tf.argmax(y, 1))
 
 # Calculate accuracy
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, "float"))
-#print "Accuracy:", accuracy.eval({x:mnist.test.images, y:mnist.test.labels})
-print "Accuracy: ", sess.run(accuracy, {x:mnist.test.images, y:mnist.test.labels})
+#print("Accuracy:", accuracy.eval({x:mnist.test.images, y:mnist.test.labels})
+print("Accuracy: ", sess.run(accuracy, {x:mnist.test.images, y:mnist.test.labels}))
 
 #Get one and predict
 
 r = random.randint(0, mnist.test.num_examples -1)
-print "Label: ", sess.run(tf.argmax(mnist.test.labels[r:r+1], 1))
-print "Prediction: ", sess.run(tf.argmax(activation,1), {x:mnist.test.images[r:r+1]})
+print("Label: ", sess.run(tf.argmax(mnist.test.labels[r:r+1], 1)))
+print("Prediction: ", sess.run(tf.argmax(activation,1), {x:mnist.test.images[r:r+1]}))
 
 #Show the image
 plt.imshow(mnist.test.images[r:r+1].reshape(28,28), cmap="Greys", interpolation="nearest")
